@@ -7,7 +7,7 @@
     <meta name="color-scheme" content="dark light" />
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
-    <link rel="manifest" href="manifest.json">
+    <link rel="manifest" href="manifest.json" />
     <title>Lyrica</title>
 
     <link rel="stylesheet" href="https://unpkg.com/open-props" />
@@ -110,6 +110,7 @@
         }
       };
 
+      // fetch new lyrics when search input changes (debounced)
       document.querySelector('input').addEventListener('input', ({ target: { value } }) => {
         searchTerm = value;
         if (value.length > 3) {
@@ -117,11 +118,23 @@
         }
       });
 
+      // immediately fetch lyrics when Enter pressed
       document.querySelector('input').addEventListener('keydown', ({ key }) => {
         if (key === 'Enter') {
           clearTimeout(timer);
           updateLyrics(searchTerm);
         }
+      });
+
+      // process WebShareTarget
+      window.addEventListener('DOMContentLoaded', () => {
+        const parsedUrl = new URL(window.location);
+        alert(
+          `Title: ${parsedUrl.searchParams.get('title')}.
+           Text: ${parsedUrl.searchParams.get('text')}.
+           URL: ${parsedUrl.searchParams.get('url')}`
+        );
+        console.log(parsedUrl.searchParams.entries);
       });
     </script>
   </body>
