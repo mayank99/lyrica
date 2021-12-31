@@ -11,6 +11,7 @@
   ],
   "start_url": "/",
   "display": "standalone",
+  "background_color": "#526875",
   "share_target": {
     "action": "/",
     "method": "GET",
