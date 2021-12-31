@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark light" />
+    <title>Lyrica</title>
+    <link rel="stylesheet" href="https://unpkg.com/open-props" />
+    <link rel="stylesheet" href="https://unpkg.com/open-props/normalize.min.css" />
+    <style>
+      :root {
+        --brand: var(--violet-6);
+        --accent: var(--violet-7);
+        --bg: var(--gradient-29);
+        --selection-bg: var(--violet-3);
+        --scrollbar-bg: hsl(0deg 0% 0% / 0.35);
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --brand: var(--blue-1);
+          --accent: var(--blue-2);
+          --bg: var(--gradient-23);
+          --selection-bg: var(--indigo-4);
+        }
+      }
+
+      ::selection {
+        background: var(--selection-bg);
+      }
+
+      ::-webkit-scrollbar {
+        width: var(--size-2);
+        height: var(--size-2);
+        background: transparent;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        border-radius: var(--radius-2);
+        background: var(--scrollbar-bg);
+      }
+
+      html {
+        min-height: 100%;
+        font-family: system-ui, sans-serif;
+        background: var(--bg);
+      }
+
+      body {
+        padding: 1rem;
+        display: grid;
+        place-content: center;
+        justify-items: center;
+        max-width: min(1000px, 95vw);
+        gap: 1rem;
+        margin: 0 auto;
+        scrollbar-width: thin;
+        overflow: overlay;
+      }
+
+      h1 {
+        color: var(--brand);
+      }
+
+      input {
+        background: var(--surface-2);
+        border-radius: var(--radius-2);
+        width: 25ch;
+        height: 2.5rem;
+      }
+
+      input:focus {
+        outline-offset: 2px;
+        outline: 2px solid var(--accent);
+      }
+
+      [data-lyrics] {
+        color: var(--text-1);
+        white-space: pre-wrap;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1>lyrica</h1>
+    <input placeholder="Search" />
+    <div data-lyrics></div>
+    <script type="module">
+      let timer;
+      let searchTerm = '';
+
+      const debounce = (func, timeout = 300) => {
+        return (...args) => {
+          clearTimeout(timer);
+          timer = setTimeout(() => {
+            func.apply(this, args);
+          }, timeout);
+        };
+      };
+
+      const updateLyrics = async (song) => {
+        try {
+          const { lyrics } = await fetch(`/.netlify/functions/lyrics?song=${song}`).then((response) => response.json());
+          document.querySelector('[data-lyrics]').innerHTML = lyrics;
+        } catch (e) {
+          console.log(`Unable to fetch lyrics: ${e}`);
+        }
+      };
+
+      document.querySelector('input').addEventListener('input', ({ target: { value } }) => {
+        searchTerm = value;
+        debounce(() => updateLyrics(value))();
+      });
+      document.querySelector('input').addEventListener('keydown', ({ key }) => {
+        if (key === 'Enter') {
+          clearTimeout(timer);
+          updateLyrics(searchTerm);
+        }
+      });
+    </script>
+  </body>
+</html>
