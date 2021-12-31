@@ -42,31 +42,31 @@
       }
 
       html {
-        min-height: 100%;
+        height: 100%;
         font-family: system-ui, sans-serif;
         background: var(--bg);
       }
 
       body {
+        height: 100%;
         padding: 1rem;
         display: grid;
         place-content: center;
-        justify-items: center;
         max-width: min(1000px, 95vw);
         gap: 1rem;
         margin: 0 auto;
-        scrollbar-width: thin;
-        overflow: overlay;
       }
 
       h1 {
+        justify-self: center;
         color: var(--brand);
       }
 
       input {
+        justify-self: center;
         background: var(--surface-2);
         border-radius: var(--radius-2);
-        width: 25ch;
+        width: 40ch;
         height: 2.5rem;
       }
 
@@ -78,6 +78,8 @@
       [data-lyrics] {
         color: var(--text-1);
         white-space: pre-wrap;
+        scrollbar-width: thin;
+        overflow: auto;
       }
     </style>
   </head>
@@ -90,13 +92,9 @@
       let timer;
       let searchTerm = '';
 
-      const debounce = (func, timeout = 300) => {
-        return (...args) => {
-          clearTimeout(timer);
-          timer = setTimeout(() => {
-            func.apply(this, args);
-          }, timeout);
-        };
+      const debounce = (func, delay = 300) => {
+        clearTimeout(timer);
+        timer = setTimeout(func, delay);
       };
 
       const updateLyrics = async (song) => {
@@ -110,8 +108,11 @@
 
       document.querySelector('input').addEventListener('input', ({ target: { value } }) => {
         searchTerm = value;
-        debounce(() => updateLyrics(value))();
+        if (value.length > 3) {
+          debounce(() => updateLyrics(value));
+        }
       });
+
       document.querySelector('input').addEventListener('keydown', ({ key }) => {
         if (key === 'Enter') {
           clearTimeout(timer);
