@@ -5,6 +5,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="color-scheme" content="dark light" />
+    <meta name="theme-color" content="#d3d3fe" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#526875" media="(prefers-color-scheme: dark)" />
+
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
     <link rel="manifest" href="manifest.json" />
@@ -61,9 +64,17 @@
         margin: 0 auto;
       }
 
+      header {
+        display: grid;
+        justify-items: center;
+      }
+
       h1 {
-        justify-self: center;
         color: var(--brand);
+      }
+
+      span {
+        color: var(--text-2);
       }
 
       input {
@@ -95,9 +106,14 @@
   </head>
 
   <body>
-    <h1>lyrica</h1>
-    <input placeholder="Search" />
+    <header>
+      <h1>lyrica</h1>
+      <span data-guide>Search lyrics or share a URL from your music app</span>
+    </header>
+
+    <input placeholder="Search songs..." />
     <div data-lyrics></div>
+
     <script type="module">
       let timer;
       let searchTerm = '';
@@ -111,6 +127,10 @@
         try {
           const { lyrics } = await fetch(`/.netlify/functions/lyrics?song=${song}`).then((response) => response.json());
           document.querySelector('[data-lyrics]').innerHTML = lyrics;
+
+          if (lyrics) {
+            document.querySelector('[data-guide]').remove();
+          }
         } catch (e) {
           console.log(`Unable to fetch lyrics: ${e}`);
         }
