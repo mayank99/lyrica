@@ -1,0 +1,16 @@
+{
+  "name": "lyrica",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@netlify/functions": "^0.10.0",
+    "cheerio": "^1.0.0-rc.10",
+    "node-fetch": "^3.1.0"
+  }
+}
