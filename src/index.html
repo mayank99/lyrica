@@ -133,15 +133,26 @@
       });
 
       // process WebShareTarget
-      window.addEventListener('DOMContentLoaded', () => {
+      window.addEventListener('DOMContentLoaded', async () => {
         const parsedUrl = new URL(window.location);
-        alert(
-          `Title: ${parsedUrl.searchParams.get('title')}.
-           Text: ${parsedUrl.searchParams.get('text')}.
-           URL: ${parsedUrl.searchParams.get('url')}`
-        );
-        console.log(parsedUrl.searchParams.entries);
+        const url = parsedUrl.searchParams.get('url');
+        const text = parsedUrl.searchParams.get('text');
+
+        const validURL = isURL(url) ? url : isURL(text) ? text : '';
+
+        if (validURL) {
+          await updateLyrics(encodeURIComponent(validURL));
+        }
       });
+
+      const isURL = (str) => {
+        try {
+          const url = new URL(str);
+          return url.protocol === 'http:' || url.protocol === 'https:' || url.protocol === 'spotify';
+        } catch (_) {
+          return false;
+        }
+      };
     </script>
   </body>
 </html>
