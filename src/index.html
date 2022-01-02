@@ -81,7 +81,7 @@
         justify-self: center;
         background: var(--surface-2);
         border-radius: var(--radius-2);
-        width: 40ch;
+        width: min(90vw, 40ch);
         height: 2.5rem;
       }
 
@@ -108,10 +108,10 @@
   <body>
     <header>
       <h1>lyrica</h1>
-      <span data-guide>Search lyrics or share a URL from your music app</span>
+      <span data-guide>Search for a song or share from your music app</span>
     </header>
 
-    <input placeholder="Search songs..." />
+    <input placeholder="Search songs…" />
     <div data-lyrics></div>
 
     <script type="module">
