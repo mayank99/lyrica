@@ -37,15 +37,17 @@
         background: var(--selection-bg);
       }
 
-      ::-webkit-scrollbar {
-        width: var(--size-2);
-        height: var(--size-2);
-        background: transparent;
-      }
+      @media (hover: hover) and (pointer: fine) {
+        ::-webkit-scrollbar {
+          width: var(--size-2);
+          height: var(--size-2);
+          background: transparent;
+        }
 
-      ::-webkit-scrollbar-thumb {
-        border-radius: var(--radius-2);
-        background: var(--scrollbar-bg);
+        ::-webkit-scrollbar-thumb {
+          border-radius: var(--radius-2);
+          background: var(--scrollbar-bg);
+        }
       }
 
       html {
@@ -90,11 +92,29 @@
         outline: 2px solid var(--accent);
       }
 
+      main {
+        scrollbar-width: thin;
+        overflow: auto;
+      }
+
+      h2 {
+        font-size: var(--font-size-2);
+        font-style: italic;
+        max-inline-size: revert;
+      }
+
+      [data-trackName] {
+        font-weight: var(--font-weight-5);
+      }
+
+      [data-artistName] {
+        font-weight: var(--font-weight-3);
+        font-size: var(--font-size-fluid-0);
+      }
+
       [data-lyrics] {
         color: var(--text-1);
         white-space: pre-wrap;
-        scrollbar-width: thin;
-        overflow: auto;
       }
     </style>
 
@@ -112,7 +132,16 @@
     </header>
 
     <input placeholder="Search songs…" />
-    <div data-lyrics></div>
+
+    <main>
+      <!-- 
+        <h2>
+          <span data-trackName></span>
+          <span data-artistName></span>
+        </h2>
+        <div data-lyrics></div>
+      -->
+    </main>
 
     <script type="module">
       let timer;
@@ -123,10 +152,18 @@
         timer = setTimeout(func, delay);
       };
 
-      const updateLyrics = async (song) => {
+      const updateLyrics = async ({ search, url }) => {
         try {
-          const { lyrics } = await fetch(`/.netlify/functions/lyrics?song=${song}`).then((response) => response.json());
-          document.querySelector('[data-lyrics]').innerHTML = lyrics;
+          const { lyrics, title, artist } = await fetch(
+            `/.netlify/functions/lyrics?${url ? `url=${url}` : `song=${search}`}`
+          ).then((response) => response.json());
+          document.querySelector('main').innerHTML = `
+            <h2>
+              <div data-trackName>${title}</div>
+              ${artist && `<div data-artistName>${artist}</div>`}
+            </h2>
+            <div data-lyrics>${lyrics}</div>
+          `;
 
           if (lyrics) {
             document.querySelector('[data-guide]').remove();
@@ -140,7 +177,7 @@
       document.querySelector('input').addEventListener('input', ({ target: { value } }) => {
         searchTerm = value;
         if (value.length > 3) {
-          debounce(() => updateLyrics(value));
+          debounce(() => updateLyrics({ search: value }));
         }
       });
 
@@ -148,7 +185,7 @@
       document.querySelector('input').addEventListener('keydown', ({ key }) => {
         if (key === 'Enter') {
           clearTimeout(timer);
-          updateLyrics(searchTerm);
+          updateLyrics({ search: searchTerm });
         }
       });
 
@@ -161,7 +198,7 @@
         const validURL = isURL(url) ? url : isURL(text) ? text : '';
 
         if (validURL) {
-          await updateLyrics(encodeURIComponent(validURL));
+          await updateLyrics({ url: encodeURIComponent(validURL) });
         }
       });
 
