@@ -94,7 +94,6 @@
 
       main {
         display: grid;
-        justify-content: center;
         scrollbar-width: thin;
         overflow: auto;
       }
@@ -148,8 +147,13 @@
         white-space: pre-wrap;
       }
 
+      [data-error] {
+        justify-self: center;
+      }
+
       [data-loading] {
         display: grid;
+        justify-self: center;
         overflow: hidden;
       }
 
@@ -195,6 +199,8 @@
     <input placeholder="Search songs…" />
 
     <main>
+      <!-- <div data-loading></div> -->
+      <!-- <div data-error></div> -->
       <!-- 
         <h2>
           <span data-trackName></span>

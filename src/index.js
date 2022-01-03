@@ -23,11 +23,11 @@ const updateLyrics = async ({ search, url }) => {
     if (lyrics) {
       document.querySelector('[data-guide]')?.remove();
     } else {
-      document.querySelector('main').innerHTML = `<div>sigh... something went wrong 😔</div>`;
+      document.querySelector('main').innerHTML = `<div data-error>sigh... something went wrong 😔</div>`;
     }
   } catch (e) {
     console.log(`Unable to fetch lyrics: ${e}`);
-    document.querySelector('main').innerHTML = `<div>sigh... something went wrong 😔</div>`;
+    document.querySelector('main').innerHTML = `<div data-error>sigh... something went wrong 😔</div>`;
   }
 };
 
