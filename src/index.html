@@ -73,6 +73,7 @@
 
       h1 {
         color: var(--brand);
+        font-style: italic;
       }
 
       span {
@@ -110,11 +111,13 @@
         color: var(--brand);
         border: thin solid;
         border-radius: var(--radius-2);
-        padding: 0.25rem 0.5rem;
+        font-size: var(--font-size-fluid-0);
+        padding-inline-end: 0.5rem;
         display: flex;
         align-items: center;
         text-decoration: none;
         text-transform: uppercase;
+        flex-shrink: 0;
       }
 
       [data-lyricsHeader] a:hover {
