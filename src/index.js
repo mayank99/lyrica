@@ -58,12 +58,14 @@ window.addEventListener('DOMContentLoaded', async () => {
   const url = parsedUrl.searchParams.get('url');
   const text = parsedUrl.searchParams.get('text');
 
-  const validURL = isURL(url) ? url : isURL(text) ? text : '';
+  const validURL = isURL(url) ? url : isURL(text) ? text : findUrlFromText(text) ?? '';
 
   if (validURL) {
     await updateLyrics({ url: encodeURIComponent(validURL) });
   }
 });
+
+const findUrlFromText = (text) => /(https?:\/\/[^\s]+)/g.exec(text)?.[0];
 
 const isURL = (str) => {
   try {
